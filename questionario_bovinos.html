@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Questionário – Bovinocultura: Primeiros Socorros (SENAR)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #1f2933;
+      color: #fff;
+      padding: 16px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+    header p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+    .container {
+      max-width: 900px;
+      margin: 16px auto 32px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 16px;
+    }
+    .info {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+    .aluno-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .aluno-box label {
+      font-weight: 600;
+      color: #111827;
+    }
+    .aluno-box input {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      outline: none;
+    }
+    .aluno-box input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+    }
+    .progress {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 8px;
+    }
+    .question {
+      margin-bottom: 12px;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #fafafa;
+      min-height: 140px;
+    }
+    .question h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: #111827;
+    }
+    .options {
+      margin-left: 4px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #111827;
+    }
+    .option input {
+      margin-right: 6px;
+    }
+    .nav-buttons, .buttons {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    button {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #btnAnterior {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    #btnProxima {
+      background: #0ea5e9;
+      color: #fff;
+    }
+    #btnCorrigir {
+      background: #15803d;
+      color: #fff;
+    }
+    #btnLimpar {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    #resultado {
+      margin-top: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+    #resultado.ok {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    #resultado.bad {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+    .feedback-list {
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .feedback-item {
+      margin-bottom: 4px;
+    }
+    .gabarito-texto {
+      color: #374151;
+    }
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Bovinocultura: Primeiros Socorros (SENAR)</h1>
+  <p>Questionário de múltipla escolha – 30 questões</p>
+</header>
+
+<div class="container">
+  <div class="info">
+    Preencha o <b>nome do aluno</b>, responda às questões (uma por vez) e clique em
+    <b>“Corrigir e mostrar nota”</b> ao final.
+  </div>
+
+  <div class="aluno-box">
+    <label for="nomeAluno">Nome do aluno:</label>
+    <input id="nomeAluno" type="text" placeholder="Digite o nome do aluno">
+  </div>
+
+  <div class="progress" id="progressText"></div>
+
+  <div id="questionBox" class="question"></div>
+
+  <div class="nav-buttons">
+    <button id="btnAnterior">◀ Anterior</button>
+    <button id="btnProxima">Próxima ▶</button>
+  </div>
+
+  <div class="buttons">
+    <button id="btnCorrigir">Corrigir e mostrar nota</button>
+    <button id="btnLimpar">Limpar respostas</button>
+  </div>
+
+  <div id="resultado"></div>
+</div>
+
+<footer>
+  Serviço Nacional de Aprendizagem Rural – SENAR, 2019
+</footer>
+
+<script>
+  const questionsData = [
+    {
+      enunciado: "1. O estômago dos bovinos é dividido em:",
+      opcoes: ["Dois compartimentos", "Três compartimentos", "Quatro compartimentos", "Cinco compartimentos"],
+      correta: 2
+    },
+    {
+      enunciado: "2. O que significa quando um bovino se afasta do rebanho?",
+      opcoes: ["Está explorando o ambiente", "Está em cio", "Pode estar doente ou com dor", "Está procurando sombra"],
+      correta: 2
+    },
+    {
+      enunciado: "3. Um bovino saudável apresenta:",
+      opcoes: ["Olhos fundos e secos", "Olhos vivos, brilhantes e claros", "Narinas ressecadas", "Comportamento apático"],
+      correta: 1
+    },
+    {
+      enunciado: "4. O que deve ser retirado do ambiente para prevenir acidentes e doenças?",
+      opcoes: ["Pasto verde", "Plásticos, arames e restos de animais mortos", "Somente o lixo orgânico", "Galhos e pedras"],
+      correta: 1
+    },
+    {
+      enunciado: "5. Por que limpar comedouros e bebedouros regularmente?",
+      opcoes: ["Para evitar desperdício de ração", "Para prevenir a transmissão de doenças", "Para economizar água", "Para melhorar o sabor da ração"],
+      correta: 1
+    },
+    {
+      enunciado: "6. A limpeza das instalações deve ocorrer:",
+      opcoes: ["Somente no fim de semana", "Sempre após o uso", "Uma vez por mês", "Somente em épocas de chuva"],
+      correta: 1
+    },
+    {
+      enunciado: "7. Olhos fundos e com crostas indicam:",
+      opcoes: ["Animal em cio", "Animal bem hidratado", "Animal doente", "Animal em repouso"],
+      correta: 2
+    },
+    {
+      enunciado: "8. Um escore de locomoção 5 indica:",
+      opcoes: ["Caminha normalmente", "Linha de dorso reta", "Dor intensa e membro sem apoio no chão", "Pequena rigidez nas patas"],
+      correta: 2
+    },
+    {
+      enunciado: "9. O método de turgor cutâneo avalia:",
+      opcoes: ["Gordura corporal", "Desidratação", "Febre", "Infecção pulmonar"],
+      correta: 1
+    },
+    {
+      enunciado: "10. Temperatura normal em bovinos:",
+      opcoes: [
+        "Jovens 36–37°C e adultos 37–38°C",
+        "Jovens 38,5–40,5°C e adultos 38–39°C",
+        "Jovens 41–42°C e adultos 39–40°C",
+        "Jovens 37–38°C e adultos 36–37°C"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "11. O método de Rueff deve ser evitado em machos por:",
+      opcoes: ["Causar falta de apetite", "Risco de lesão peniana", "Ser difícil de aplicar", "Não permitir queda"],
+      correta: 1
+    },
+    {
+      enunciado: "12. O brete serve para:",
+      opcoes: ["Aprender o comportamento", "Exames e manejo com segurança", "Conter bezerros para aleitamento", "Engordar o animal"],
+      correta: 1
+    },
+    {
+      enunciado: "13. Diante de ferida com sangramento deve-se:",
+      opcoes: ["Jogar água quente", "Aplicar pomada", "Fazer pressão com gaze limpa", "Passar sal grosso"],
+      correta: 2
+    },
+    {
+      enunciado: "14. Por que não usar talas improvisadas em fraturas?",
+      opcoes: [
+        "Podem causar obstrução dos vasos sanguíneos",
+        "São difíceis de remover",
+        "Custam caro",
+        "Podem prender carrapatos"
+      ],
+      correta: 0
+    },
+    {
+      enunciado: "15. Sinais de Brucelose:",
+      opcoes: [
+        "Tosse e febre",
+        "Aborto e bolsa escrotal aumentada",
+        "Diarreia e fraqueza muscular",
+        "Úbere avermelhado"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "16. A tuberculose é transmitida principalmente por:",
+      opcoes: [
+        "Mosquitos",
+        "Secreções respiratórias e leite",
+        "Água contaminada por urina",
+        "Ingestão de plantas tóxicas"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "17. Uma forma de prevenir Clostridioses é:",
+      opcoes: [
+        "Aplicar antibióticos em todos os animais",
+        "Vacinar e eliminar restos de carcaças",
+        "Reduzir a alimentação",
+        "Manter animais confinados"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "18. Para reduzir o risco de leptospirose:",
+      opcoes: [
+        "Deixar roedores livres",
+        "Evitar o contato com secreções e controlar ratos",
+        "Usar a mesma seringa em todos os animais",
+        "Fornecer mais sal mineral"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "19. Sintomas de IBR:",
+      opcoes: [
+        "Febre, tosse e corrimento nasal",
+        "Fraqueza muscular e paralisia",
+        "Diarreia e emagrecimento",
+        "Apatia e perda de apetite leve"
+      ],
+      correta: 0
+    },
+    {
+      enunciado: "20. A Febre Aftosa é de notificação obrigatória porque:",
+      opcoes: [
+        "É zoonose",
+        "É altamente contagiosa e afeta a economia",
+        "Não tem tratamento",
+        "Não causa sintomas visíveis"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "21. Na hipocalcemia da parturiente, observa-se:",
+      opcoes: [
+        "Diarreia e febre",
+        "Vaca deitada com pescoço em “S”",
+        "Tremores musculares",
+        "Tosse e corrimento"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "22. A cetose ocorre geralmente:",
+      opcoes: [
+        "Antes do parto",
+        "Alguns dias após o parto, em vacas gordas",
+        "Em bezerros jovens",
+        "Durante a gestação inicial"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "23. Causa comum de acidose ruminal:",
+      opcoes: [
+        "Falta de pasto",
+        "Excesso de ração concentrada",
+        "Falta de água",
+        "Exposição ao frio"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "24. Sinais de distocia:",
+      opcoes: [
+        "Parto há mais de 8 horas e bezerro mal posicionado",
+        "Tosse e febre",
+        "Úbere inflamado",
+        "Bezerro pequeno demais"
+      ],
+      correta: 0
+    },
+    {
+      enunciado: "25. Se não se sabe qual cobra picou o animal:",
+      opcoes: [
+        "Esperar o veterinário sem agir",
+        "Aplicar soro polivalente e hidratar o animal",
+        "Amarrar o membro",
+        "Cortar o local da picada"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "26. Via de administração NÃO citada na cartilha:",
+      opcoes: ["Oral", "Tópica", "Intramuscular", "Retal"],
+      correta: 3
+    },
+    {
+      enunciado: "27. O peso do animal é importante para:",
+      opcoes: [
+        "Definir o local da injeção",
+        "Calcular a dose correta",
+        "Saber se o animal está doente",
+        "Determinar a idade"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "28. Reutilizar seringas e agulhas pode:",
+      opcoes: [
+        "Economizar tempo",
+        "Transmitir doenças e causar abscessos",
+        "Melhorar a imunidade",
+        "Facilitar a vacinação"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "29. A vacinação contra Febre Aftosa normalmente ocorre:",
+      opcoes: [
+        "Janeiro e fevereiro",
+        "Maio e novembro",
+        "Março e setembro",
+        "Abril e outubro"
+      ],
+      correta: 1
+    },
+    {
+      enunciado: "30. As bezerras devem ser vacinadas contra Brucelose:",
+      opcoes: [
+        "Ao nascer",
+        "De 3 a 8 meses de idade",
+        "Após o primeiro parto",
+        "Somente quando doentes"
+      ],
+      correta: 1
+    }
+  ];
+
+  const letters = ["A", "B", "C", "D"];
+  let currentIndex = 0;
+  let answers = new Array(questionsData.length).fill(null);
+
+  const questionBox = document.getElementById("questionBox");
+  const progressText = document.getElementById("progressText");
+  const resultadoDiv = document.getElementById("resultado");
+  const btnAnterior = document.getElementById("btnAnterior");
+  const btnProxima = document.getElementById("btnProxima");
+  const btnCorrigir = document.getElementById("btnCorrigir");
+  const btnLimpar = document.getElementById("btnLimpar");
+
+  function renderQuestion(index) {
+    const q = questionsData[index];
+    progressText.textContent = `Pergunta ${index + 1} de ${questionsData.length}`;
+    questionBox.innerHTML = "";
+
+    const title = document.createElement("h3");
+    title.textContent = q.enunciado;
+    questionBox.appendChild(title);
+
+    const optsDiv = document.createElement("div");
+    optsDiv.className = "options";
+
+    q.opcoes.forEach((texto, i) => {
+      const optDiv = document.createElement("label");
+      optDiv.className = "option";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "qAtual";
+      input.value = i;
+
+      if (answers[index] === i) {
+        input.checked = true;
+      }
+
+      input.addEventListener("change", () => {
+        answers[index] = i;
+      });
+
+      optDiv.appendChild(input);
+      optDiv.appendChild(document.createTextNode(` (${letters[i]}) ${texto}`));
+      optsDiv.appendChild(optDiv);
+    });
+
+    questionBox.appendChild(optsDiv);
+
+    btnAnterior.disabled = index === 0;
+    btnProxima.disabled = index === questionsData.length - 1;
+  }
+
+  function corrigir() {
+    const nome = document.getElementById("nomeAluno").value.trim() || "Aluno(a)";
+    let acertos = 0;
+    const erros = [];
+
+    answers.forEach((resp, i) => {
+      const correta = questionsData[i].correta;
+      if (resp === correta) {
+        acertos++;
+      } else if (resp !== null) {
+        erros.push({
+          num: i + 1,
+          sua: resp,
+          correta: correta
+        });
+      } else {
+        erros.push({
+          num: i + 1,
+          sua: null,
+          correta: correta
+        });
+      }
+    });
+
+    const nota = ((acertos / questionsData.length) * 10).toFixed(1);
+
+    resultadoDiv.style.display = "block";
+    resultadoDiv.innerHTML = "";
+    if (acertos >= questionsData.length * 0.7) {
+      resultadoDiv.className = "ok";
+      resultadoDiv.innerHTML = `<b>${nome}</b>, você acertou <b>${acertos}</b> de <b>${questionsData.length}</b> questões. Nota: <b>${nota}</b>.`;
+    } else {
+      resultadoDiv.className = "bad";
+      resultadoDiv.innerHTML = `<b>${nome}</b>, você acertou <b>${acertos}</b> de <b>${questionsData.length}</b> questões. Nota: <b>${nota}</b>. Continue revisando a cartilha.`;
+    }
+
+    const fbList = document.createElement("div");
+    fbList.className = "feedback-list";
+
+    erros.forEach(e => {
+      const item = document.createElement("div");
+      item.className = "feedback-item";
+
+      const suaResp = e.sua === null ? "não respondida" : `(${letters[e.sua]})`;
+      const gab = `(${letters[e.correta]}) ${questionsData[e.num - 1].opcoes[e.correta]}`;
+
+      item.innerHTML = `Q${e.num}: sua resposta: <span class="gabarito-texto">${suaResp}</span> • gabarito: <span class="gabarito-texto">${gab}</span>`;
+      fbList.appendChild(item);
+    });
+
+    resultadoDiv.appendChild(fbList);
+  }
+
+  function limpar() {
+    answers = new Array(questionsData.length).fill(null);
+    document.getElementById("nomeAluno").value = "";
+    resultadoDiv.style.display = "none";
+    resultadoDiv.textContent = "";
+    currentIndex = 0;
+    renderQuestion(currentIndex);
+  }
+
+  btnAnterior.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  btnProxima.addEventListener("click", () => {
+    if (currentIndex < questionsData.length - 1) {
+      currentIndex++;
+      renderQuestion(currentIndex);
+    }
+  });
+
+  btnCorrigir.addEventListener("click", corrigir);
+  btnLimpar.addEventListener("click", limpar);
+
+  renderQuestion(currentIndex);
+</script>
+</body>
+</html>
